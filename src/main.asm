@@ -59,59 +59,40 @@ STDOUT:
         mov sp, bp
         pop sp
         ret 4
-
+    
     .print:
-        mov ax, ds
-        mov es, ax
-        mov bp, di ;mov string from di
-        mov cx, bx ; get len from bx
-        
+        mov ax, ds ; 0x7c00
+        mov es, ax ; 
+        mov bp, di ; [es:bp] 7c00:String_location
+        ; length is stored in cx
         mov ax, 1300h
         mov bx, 000fh
         int 10h
-        mov bp, sp
-        ret
-BIOS_13:
-    .disk_error:
-        
-        mov di, DISK_ERROR_MSG
-        mov bx, len1
-        call  STDOUT.print
-
-       
         ret 
+BIOS_13:
     .read_sector:
-        mov ax, 0201h
-        mov cx, 0001h
-        mov dx, 0000h
-        mov bx, 0xa000
-        mov es, bx
-        mov bx, 0x1000
-        int 13h
+        mov ax, 0201h ;02h read, 01h 
+        mov cx, 0101h ;01h 01h
+        mov dx, 0000h ;0h
 
-        jc error
-        cmp al, 0xa
-        jne error
-        ;if (carry || al != no_of_sectors) BIOS_13.disk_error() else return;
-        jmp end
-        error:
-            call BIOS_13.disk_error
-        end:
+        mov bx, 0xa000 ;a000h
+        mov es, bx ; a000h
+        mov bx, 0x1000 ;[es:bx] 0000:a1000h
+        int 13h
         ret
         
     
 _main:
-    
-    call BIOS_13.disk_error
+    mov di, msg
+    mov cx, len
+    call STDOUT.print
     
     
     jmp $
 
-DISK_ERROR_MSG db "Disk read error!", 0
-len1 equ $-DISK_ERROR_MSG
+msg db "Random message",0
+len equ $-msg
 
-msg db "Hello this is Jalen's bootloader",0
-len2 equ $-msg
 ; cursor properties
 default_cursor_pos times 3 db 0
 times 510-($-$$) db 0 

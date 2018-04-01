@@ -33,7 +33,7 @@ strings:
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register 6
 	movq	%rdi, -8(%rbp)
-	nop
+	movl	$0, %eax
 	popq	%rbp
 	.cfi_def_cfa 7, 8
 	ret

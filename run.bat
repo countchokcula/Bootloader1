@@ -1,1 +1,1 @@
-qemu-system-x86_64 -drive format=raw,file=./build/a.bin
+qemu-system-x86_64 -drive serial=HDD,index=0,media=disk,cyls=1,heads=2,secs=10,format=raw,file=./build/a.bin
