@@ -78,7 +78,8 @@ BIOS_10:
         call BIOS_10.get_cursor_pos
         mov ah, 02h
         mov bh, 0h
-        add dl,  [bp+4]
+        add dl, [bp+4]
+        int 10h
         
         mov bp, sp
         pop bp
